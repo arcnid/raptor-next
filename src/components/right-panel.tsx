@@ -17,11 +17,11 @@ import {
 } from "recharts";
 
 const data = [
-	{ name: "Jan", value: 400 },
-	{ name: "Feb", value: 300 },
-	{ name: "Mar", value: 200 },
-	{ name: "Apr", value: 278 },
-	{ name: "May", value: 189 },
+	{ name: "9 am", value: 400 },
+	{ name: "11 am", value: 4000 },
+	{ name: "1 pm", value: 5000 },
+	{ name: "3 pm", value: 7000 },
+	{ name: "5 pm", value: 8015 },
 ];
 
 export default function RightPanel() {
@@ -31,15 +31,16 @@ export default function RightPanel() {
 			style={{
 				backgroundColor: "#EBD12B",
 				borderRadius: 10,
-				marginTop: 25,
+				marginTop: 24,
 				marginRight: 25,
+				padding: 20,
 			}}
 		>
 			<Accordion type="single" collapsible className="w-full">
 				<AccordionItem value="item-1">
 					<AccordionTrigger className="flex justify-between">
 						<span>Throughput</span>
-						<span className="text-right">0.00 bu/hr</span>
+						<span className="text-right">8,015 bu/hr</span>
 					</AccordionTrigger>
 					<AccordionContent>
 						<ResponsiveContainer width="100%" height={200}>

@@ -15,27 +15,42 @@ export default function LeftPanel() {
 				/>
 				<div className="absolute inset-0 flex items-center justify-center">
 					<h2 className="text-2xl font-bold text-white bg-black bg-opacity-50 p-2 rounded">
-						BIN #8 - Soybeans
+						BIN #8 - SOYBEANS
 					</h2>
 				</div>
 			</div>
 
 			<div className="space-y-4">
-				<div className="flex justify-center items-center gap-60">
-					<div className="flex items-center gap-2">
-						<h2 className="text-xl font-semibold">Temperature</h2>
-						<span>75°F</span>
+				<div className="flex justify-center items-center gap-40">
+					<div className="flex items-center gap-1">
+						<h2 className="text-xl">Temperature</h2>
+						<span className="font-semibold">75°F</span>
 					</div>
-					<div className="flex items-center gap-2">
-						<h2 className="text-xl font-semibold">Humidity</h2>
-						<span>40%</span>
+					<div className="flex items-center gap-1">
+						<h2 className="text-xl">Relative Humidity</h2>
+						<span className="font-semibold">40%</span>
 					</div>
 				</div>
 			</div>
 
 			<div className="space-y-4">
-				<h3 className="text-lg font-semibold">Target Throughput</h3>
-				<Slider defaultValue={[50]} max={100} step={1} />
+				{/* Labels for slider range */}
+				<div className="grid grid-cols-3 text-sm font-medium">
+					<span className="text-left">4,500</span>
+					<span className="text-center">7,500</span>
+					<span className="text-right">10,000</span>
+				</div>
+				{/* Updated slider with new range and color */}
+				<Slider
+					min={4500}
+					max={10000}
+					defaultValue={[5250]}
+					step={50}
+					className="accent-blue-500" // This applies a blue accent to the slider thumb/track
+				/>
+				<h3 className="text-lg font-semibold text-center">
+					Target Throughput: 5,250 bu/hr
+				</h3>
 			</div>
 
 			<div className="flex justify-center space-x-4">

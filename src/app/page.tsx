@@ -1,4 +1,4 @@
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/navbarWithSlider";
 import LeftPanel from "@/components/left-panel";
 import RightPanel from "@/components/right-panel";
 
