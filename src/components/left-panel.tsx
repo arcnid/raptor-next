@@ -3,11 +3,11 @@ export default function LeftPanel() {
 		<div className="p-6 space-y-6">
 			{/* Image section */}
 			<div className="relative h-40 bg-gray-200 rounded-lg overflow-hidden">
-				<img
+				{/* <img
 					src="/soy.png"
 					alt="Grain Texture"
 					className="absolute inset-0 w-full h-full object-cover"
-				/>
+				/> */}
 				<div className="absolute inset-0 flex items-center justify-center">
 					<h2 className="text-2xl font-bold text-white bg-black bg-opacity-50 p-2 rounded">
 						BIN #8 - SOYBEANS
@@ -16,7 +16,7 @@ export default function LeftPanel() {
 			</div>
 
 			{/* Temperature & Humidity section */}
-			<div className="space-y-4">
+			<div className="space-y-4" style={{ borderTop: "1px solid #E5E7EB" }}>
 				<div className="flex justify-center items-center gap-40">
 					<div className="flex items-center gap-1">
 						<h2 className="text-xl">Temperature</h2>

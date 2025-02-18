@@ -5,7 +5,26 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 
-export default function Navbar() {
+interface NavbarProps {
+	activeRoute: string;
+}
+
+export default function Navbar({ activeRoute }: NavbarProps) {
+	// Define all possible pages
+	const pages = [
+		{ href: "/", label: "Home" },
+		{ href: "/program", label: "Program" },
+		{ href: "/settings", label: "Settings" },
+		{ href: "/maintenance", label: "Maintenance" },
+	];
+
+	// Find the active page (fallback to Home if not found)
+	const activePage =
+		pages.find((page) => page.href === activeRoute) || pages[0];
+
+	// Filter out the active page from the sidebar list
+	const sidebarLinks = pages.filter((page) => page.href !== activeRoute);
+
 	const [menuOpen, setMenuOpen] = useState(false);
 
 	const toggleMenu = () => setMenuOpen(!menuOpen);
@@ -23,21 +42,20 @@ export default function Navbar() {
 			{/* Navbar */}
 			<nav
 				className="bg-black text-white p-6 flex justify-between items-center relative"
-				// Give navbar a high z-index so it stays on top of the overlay
-				style={{ zIndex: 1000 }}
+				style={{ zIndex: 1000 }} // High z-index so it stays on top of the overlay
 			>
 				<div className="flex items-center space-x-4">
 					<button onClick={toggleMenu} className="bg-yellow-100 p-3 rounded-md">
 						<Menu
-							size={28} // Increased icon size
+							size={28}
 							className={`text-black transition-transform duration-300 ${
 								menuOpen ? "rotate-90" : ""
 							}`}
 						/>
 					</button>
-					{/* Page Indicator */}
+					{/* Active Page Indicator */}
 					<span className="text-xl font-semibold" style={{ fontSize: "2em" }}>
-						Home
+						{activePage.label}
 					</span>
 				</div>
 				<span className="text-xl font-semibold" style={{ fontSize: "2em" }}>
@@ -62,65 +80,28 @@ export default function Navbar() {
 								className="text-black"
 								style={{ zIndex: 3000 }}
 							>
-								<X size={28} /> {/* Increased icon size */}
+								<X size={28} />
 							</button>
 						</div>
 						<div
 							style={{ color: "white", marginLeft: "65px", marginTop: "-50px" }}
 						>
 							<ul className="space-y-4">
-								<li>
-									<Link
-										href="/"
-										onClick={() => setMenuOpen(false)}
-										style={{
-											color: "white",
-											fontSize: "2rem",
-											fontWeight: "bold",
-										}}
-									>
-										Home
-									</Link>
-								</li>
-								<li>
-									<Link
-										href="/Program"
-										onClick={() => setMenuOpen(false)}
-										style={{
-											color: "white",
-											fontSize: "2rem",
-											fontWeight: "bold",
-										}}
-									>
-										Program
-									</Link>
-								</li>
-								<li>
-									<Link
-										href="/Settings"
-										onClick={() => setMenuOpen(false)}
-										style={{
-											color: "white",
-											fontSize: "2rem",
-											fontWeight: "bold",
-										}}
-									>
-										Settings
-									</Link>
-								</li>
-								<li>
-									<Link
-										href="/Maintenance"
-										onClick={() => setMenuOpen(false)}
-										style={{
-											color: "white",
-											fontSize: "2rem",
-											fontWeight: "bold",
-										}}
-									>
-										Maintenance
-									</Link>
-								</li>
+								{sidebarLinks.map((page) => (
+									<li key={page.href}>
+										<Link
+											href={page.href}
+											onClick={() => setMenuOpen(false)}
+											style={{
+												color: "white",
+												fontSize: "2rem",
+												fontWeight: "bold",
+											}}
+										>
+											{page.label}
+										</Link>
+									</li>
+								))}
 							</ul>
 						</div>
 					</div>
