@@ -1,6 +1,4 @@
 import Navbar from "@/components/navbarWithSlider";
-import LeftPanel from "@/components/left-panel";
-import RightPanel from "@/components/right-panel";
 import { SettingsPanel } from "@/components/SettingsPanel";
 
 export default function Home() {
