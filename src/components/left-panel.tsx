@@ -67,14 +67,14 @@ export default function LeftPanel({
 				<SensorCard
 					title="Temperature"
 					icon={Thermometer}
-					value="74"
+					value="75"
 					unit="°F"
 					iconColor="text-red-500"
 				/>
 				<SensorCard
 					title="Relative Humidity"
 					icon={Droplets}
-					value="45"
+					value="13"
 					unit="%"
 					iconColor="text-blue-500"
 				/>

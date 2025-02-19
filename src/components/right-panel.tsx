@@ -35,60 +35,67 @@ export default function RightPanel({
 	resetFlag: boolean;
 	onResetComplete: () => void;
 }) {
+	// Displayed sweep state (angle and subtle offset)
 	const [sweepState, setSweepState] = useState({ x: 0, y: 0, angle: 0 });
-	const [rpm, setRpm] = useState(0.1); // default 0.1 rotations per minute
+	// RPM for the sweep (default 0.1 rotations per minute)
+	const [rpm] = useState(0.1);
 	const rpmRef = useRef(rpm);
+
+	// We'll store the current angle in this ref.
+	const lastAngleRef = useRef(0);
+
+	// To access the current isRunning value inside our animation loop,
+	// we use a ref that gets updated when isRunning changes.
+	const isRunningRef = useRef(isRunning);
+	useEffect(() => {
+		isRunningRef.current = isRunning;
+	}, [isRunning]);
+
+	// A ref for the position accordion trigger (if needed)
 	const positionTriggerRef = useRef(null);
 
-	useEffect(() => {
-		rpmRef.current = rpm;
-	}, [rpm]);
-
-	// Optionally open the position accordion on render.
-	useEffect(() => {
-		if (positionTriggerRef.current) {
-			// positionTriggerRef.current.click();
-		}
-	}, []);
-
-	useEffect(() => {
-		let rafId: any;
-		let startTime = Date.now();
-
-		const updateSweep = () => {
-			// If not running, simply request the next frame without updating.
-			if (!isRunning) {
-				rafId = requestAnimationFrame(updateSweep);
-				return;
-			}
-
-			const now = Date.now();
-			const elapsed = (now - startTime) / 1000;
-			// Calculate the current angle based on the RPM.
-			const angle = (((elapsed * rpmRef.current) / 60) % 1) * 360;
-
-			// Compute a subtle offset for a circular motion.
-			const offsetRadius = 5; // pixels
-			const offsetX = Math.cos(angle * (Math.PI / 180)) * offsetRadius;
-			const offsetY = Math.sin(angle * (Math.PI / 180)) * offsetRadius;
-
-			setSweepState({ x: offsetX, y: offsetY, angle });
-			rafId = requestAnimationFrame(updateSweep);
-		};
-
-		rafId = requestAnimationFrame(updateSweep);
-		return () => cancelAnimationFrame(rafId);
-	}, [isRunning]); // Restart effect when isRunning changes
-
-	// Handle reset logic: if a reset is triggered, reset the sweepState and restart the timer.
+	// Reset logic: when resetFlag is true, clear the angle.
 	useEffect(() => {
 		if (resetFlag) {
 			setSweepState({ x: 0, y: 0, angle: 0 });
-			// Optionally reset the start time for the animation.
-			// Inform the parent that reset is complete.
+			lastAngleRef.current = 0;
 			onResetComplete();
 		}
 	}, [resetFlag, onResetComplete]);
+
+	// The animation loop:
+	useEffect(() => {
+		let rafId: number;
+		let lastTime = Date.now();
+
+		const loop = () => {
+			const now = Date.now();
+			const dt = now - lastTime;
+			lastTime = now;
+
+			// Only update the angle if running.
+			if (isRunningRef.current) {
+				// Calculate how many degrees to add this frame.
+				// (rpm * 360° / 60 seconds) gives degrees per second.
+				const deltaAngle = (dt / 1000) * (rpmRef.current * (360 / 60));
+				lastAngleRef.current = (lastAngleRef.current + deltaAngle) % 360;
+
+				// Compute a subtle offset (for visual flair)
+				const offsetRadius = 5; // pixels
+				const offsetX =
+					Math.cos(lastAngleRef.current * (Math.PI / 180)) * offsetRadius;
+				const offsetY =
+					Math.sin(lastAngleRef.current * (Math.PI / 180)) * offsetRadius;
+
+				setSweepState({ x: offsetX, y: offsetY, angle: lastAngleRef.current });
+			}
+
+			rafId = requestAnimationFrame(loop);
+		};
+
+		loop();
+		return () => cancelAnimationFrame(rafId);
+	}, []);
 
 	return (
 		<div className="p-6" style={{ marginTop: 0 }}>
@@ -139,14 +146,13 @@ export default function RightPanel({
 								<span>Position</span>
 							</div>
 							<span className="text-right font-bold">
-								{sweepState.angle ? `${Math.round(sweepState.angle)}°` : "0°"} -
-								{isRunning === true ? " Running" : " Stopped"}
+								{Math.round(sweepState.angle)}° -{" "}
+								{isRunning ? "Running" : "Stopped"}
 							</span>
 						</AccordionTrigger>
 						<AccordionContent className="p-4">
 							<ResponsiveContainer width="100%" height={300}>
 								<div className="flex flex-col items-center justify-center">
-									{/* Display the current sweep position */}
 									<SweepPosition sweepState={sweepState} />
 								</div>
 							</ResponsiveContainer>
