@@ -46,7 +46,6 @@ const MaintenanceButton = ({
 export function MaintenancePanel() {
 	return (
 		<div className="p-6 bg-gray-100 w-full">
-			<h1 className="text-3xl font-bold mb-6">Maintenance</h1>
 			<div className="flex flex-col lg:flex-row gap-6">
 				<div className="w-full lg:w-1/3">
 					<JogControl title="Tractor Jog" />

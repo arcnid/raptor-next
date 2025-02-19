@@ -27,7 +27,7 @@ const SensorCard = ({ title, icon: Icon, value, unit, iconColor }) => (
 	</div>
 );
 
-export default function LeftPanel() {
+export default function LeftPanel({ isRunning, onStart, onStop, onReset }) {
 	const [throughput, setThroughput] = useState(6000);
 
 	return (
@@ -68,7 +68,11 @@ export default function LeftPanel() {
 					min={4000}
 					step={100}
 					className="mb-4 bg-gray-100"
-					style={{ height: 8, backgroundColor: "#E5E7EB", color: "#3B82F6" }}
+					style={{
+						height: 8,
+						backgroundColor: "#E5E7EB",
+						color: "#3B82F6",
+					}}
 				/>
 				<div className="flex justify-between text-sm text-gray-600">
 					<span>4000</span>
@@ -85,6 +89,7 @@ export default function LeftPanel() {
 					size="lg"
 					variant="outline"
 					className="bg-gray-100 h-32 text-lg font-bold flex flex-col items-center justify-center space-y-2 border-2"
+					onClick={onReset}
 				>
 					<RotateCcw size={32} />
 					<span>Reset</span>
@@ -92,6 +97,7 @@ export default function LeftPanel() {
 				<Button
 					size="lg"
 					className="h-32 text-lg font-bold flex flex-col items-center justify-center space-y-2 bg-green-500 hover:bg-green-600 text-white"
+					onClick={onStart}
 				>
 					<Play size={32} />
 					<span>Start</span>
@@ -99,6 +105,7 @@ export default function LeftPanel() {
 				<Button
 					size="lg"
 					className="h-32 text-lg font-bold flex flex-col items-center justify-center space-y-2 bg-red-500 hover:bg-red-600 text-white"
+					onClick={onStop}
 				>
 					<Square size={32} />
 					<span>Stop</span>

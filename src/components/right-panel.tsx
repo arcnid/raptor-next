@@ -26,23 +26,18 @@ const data = [
 	{ name: "5pm", value: 8000 },
 ];
 
-export default function RightPanel() {
-	// State for sweep (offset and angle) and RPM (rotations per minute)
+export default function RightPanel({ isRunning, resetFlag, onResetComplete }) {
 	const [sweepState, setSweepState] = useState({ x: 0, y: 0, angle: 0 });
-	const [rpm, setRpm] = useState(0.1); // default 1 rotation per minute
+	const [rpm, setRpm] = useState(0.1); // default 0.1 rotations per minute
 	const rpmRef = useRef(rpm);
-
-	// Ref for the Position accordion trigger
 	const positionTriggerRef = useRef(null);
 
-	// Update rpmRef whenever rpm changes (without resetting the timer)
 	useEffect(() => {
 		rpmRef.current = rpm;
 	}, [rpm]);
 
-	//use effect to open position on render
+	// Optionally open the position accordion on render.
 	useEffect(() => {
-		//simulate button click of position so it displays on render
 		if (positionTriggerRef.current) {
 			// positionTriggerRef.current.click();
 		}
@@ -50,18 +45,22 @@ export default function RightPanel() {
 
 	useEffect(() => {
 		let rafId;
-		const startTime = Date.now();
+		let startTime = Date.now();
 
 		const updateSweep = () => {
+			// If not running, simply request the next frame without updating.
+			if (!isRunning) {
+				rafId = requestAnimationFrame(updateSweep);
+				return;
+			}
+
 			const now = Date.now();
 			const elapsed = (now - startTime) / 1000;
-			// Use the current RPM (rotations per minute) stored in rpmRef
-			// Compute how many full rotations have been made: elapsed * (rpm/60)
-			// The fractional part multiplied by 360 gives the current angle.
+			// Calculate the current angle based on the RPM.
 			const angle = (((elapsed * rpmRef.current) / 60) % 1) * 360;
 
-			// Compute a small offset for a subtle circular motion.
-			const offsetRadius = 5; // pixels; adjust as needed
+			// Compute a subtle offset for a circular motion.
+			const offsetRadius = 5; // pixels
 			const offsetX = Math.cos(angle * (Math.PI / 180)) * offsetRadius;
 			const offsetY = Math.sin(angle * (Math.PI / 180)) * offsetRadius;
 
@@ -71,11 +70,20 @@ export default function RightPanel() {
 
 		rafId = requestAnimationFrame(updateSweep);
 		return () => cancelAnimationFrame(rafId);
-	}, []);
+	}, [isRunning]); // Restart effect when isRunning changes
+
+	// Handle reset logic: if a reset is triggered, reset the sweepState and restart the timer.
+	useEffect(() => {
+		if (resetFlag) {
+			setSweepState({ x: 0, y: 0, angle: 0 });
+			// Optionally reset the start time for the animation.
+			// Inform the parent that reset is complete.
+			onResetComplete();
+		}
+	}, [resetFlag, onResetComplete]);
 
 	return (
 		<div className="p-6" style={{ marginTop: 0 }}>
-			{/* The parent's offset is applied to the entire panel */}
 			<div
 				style={{
 					transform: `translate(${sweepState.x}px, ${sweepState.y}px)`,
@@ -115,7 +123,7 @@ export default function RightPanel() {
 						className="border rounded-lg overflow-hidden card-shadow shadow-md"
 					>
 						<AccordionTrigger
-							ref={positionTriggerRef} // Added ref here
+							ref={positionTriggerRef}
 							className="flex justify-between p-4 hover:bg-gray-50"
 						>
 							<div className="flex items-center">
@@ -124,13 +132,13 @@ export default function RightPanel() {
 							</div>
 							<span className="text-right font-bold">
 								{sweepState.angle ? `${Math.round(sweepState.angle)}°` : "0°"} -
-								Running
+								{isRunning === true ? " Running" : " Stopped"}
 							</span>
 						</AccordionTrigger>
 						<AccordionContent className="p-4">
 							<ResponsiveContainer width="100%" height={300}>
 								<div className="flex flex-col items-center justify-center">
-									{/* Pass the current sweep state to the display-only SweepPosition */}
+									{/* Display the current sweep position */}
 									<SweepPosition sweepState={sweepState} />
 								</div>
 							</ResponsiveContainer>
