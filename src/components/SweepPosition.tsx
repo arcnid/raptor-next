@@ -1,5 +1,11 @@
 "use client";
-export function SweepPosition({ sweepState }) {
+export function SweepPosition({
+	sweepState,
+}: {
+	sweepState: {
+		angle: number;
+	};
+}) {
 	const { angle } = sweepState;
 
 	return (

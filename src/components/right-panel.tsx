@@ -26,7 +26,15 @@ const data = [
 	{ name: "5pm", value: 8000 },
 ];
 
-export default function RightPanel({ isRunning, resetFlag, onResetComplete }) {
+export default function RightPanel({
+	isRunning,
+	resetFlag,
+	onResetComplete,
+}: {
+	isRunning: boolean;
+	resetFlag: boolean;
+	onResetComplete: () => void;
+}) {
 	const [sweepState, setSweepState] = useState({ x: 0, y: 0, angle: 0 });
 	const [rpm, setRpm] = useState(0.1); // default 0.1 rotations per minute
 	const rpmRef = useRef(rpm);
@@ -44,7 +52,7 @@ export default function RightPanel({ isRunning, resetFlag, onResetComplete }) {
 	}, []);
 
 	useEffect(() => {
-		let rafId;
+		let rafId: any;
 		let startTime = Date.now();
 
 		const updateSweep = () => {

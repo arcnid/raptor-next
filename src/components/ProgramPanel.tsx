@@ -1,7 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Plus, Upload } from "lucide-react";
 
-const SettingButton = ({ title, icon: Icon }) => (
+const SettingButton = ({
+	title,
+	icon: Icon,
+}: {
+	title: string;
+	icon: React.ElementType;
+}) => (
 	<Button
 		variant="outline"
 		className="flex flex-col h-24 w-full text-lg font-semibold items-center justify-center gap-2 border-2 border-gray-300 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105"

@@ -12,7 +12,19 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-const SensorCard = ({ title, icon: Icon, value, unit, iconColor }) => (
+const SensorCard = ({
+	title,
+	icon: Icon,
+	value,
+	unit,
+	iconColor,
+}: {
+	title: string;
+	icon: React.ElementType;
+	value: string;
+	unit: string;
+	iconColor: string;
+}) => (
 	<div className="border p-4 rounded-lg shadow-md">
 		<div className="flex items-center justify-between">
 			<div className="flex items-center">
@@ -27,7 +39,17 @@ const SensorCard = ({ title, icon: Icon, value, unit, iconColor }) => (
 	</div>
 );
 
-export default function LeftPanel({ isRunning, onStart, onStop, onReset }) {
+export default function LeftPanel({
+	isRunning,
+	onStart,
+	onStop,
+	onReset,
+}: {
+	isRunning: boolean;
+	onStart: () => void;
+	onStop: () => void;
+	onReset: () => void;
+}) {
 	const [throughput, setThroughput] = useState(6000);
 
 	return (
