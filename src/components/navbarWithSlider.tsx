@@ -23,7 +23,7 @@ export default function Navbar({ activeRoute }: NavbarProps) {
 		pages.find((page) => page.href === activeRoute) || pages[0];
 
 	// Filter out the active page from the sidebar list
-	const sidebarLinks = pages.filter((page) => page.href !== activeRoute);
+	const sidebarLinks = pages.filter((page) => page.href !== activePage.href);
 
 	const [menuOpen, setMenuOpen] = useState(false);
 
@@ -39,13 +39,15 @@ export default function Navbar({ activeRoute }: NavbarProps) {
 
 	return (
 		<>
-			{/* Navbar */}
 			<nav
 				className="bg-black text-white p-6 flex justify-between items-center relative"
-				style={{ zIndex: 1000 }} // High z-index so it stays on top of the overlay
+				style={{ zIndex: 1000 }} // Keeps the navbar above other content
 			>
 				<div className="flex items-center space-x-4">
-					<button onClick={toggleMenu} className="bg-yellow-100 p-3 rounded-md">
+					<button
+						onClick={toggleMenu}
+						className="bg-yellow-100 p-3 rounded-md shadow-md"
+					>
 						<Menu
 							size={28}
 							className={`text-black transition-transform duration-300 ${
@@ -54,7 +56,10 @@ export default function Navbar({ activeRoute }: NavbarProps) {
 						/>
 					</button>
 					{/* Active Page Indicator */}
-					<span className="text-xl font-semibold" style={{ fontSize: "2em" }}>
+					<span
+						className="text-xl font-semibold"
+						style={{ fontSize: "2em", fontWeight: "bold" }}
+					>
 						{activePage.label}
 					</span>
 				</div>
@@ -64,10 +69,12 @@ export default function Navbar({ activeRoute }: NavbarProps) {
 			</nav>
 
 			{/* Sidebar Overlay */}
+			{/* We offset the overlay to start below the navbar (assumed height: 72px) */}
 			<div
-				className={`fixed top-0 left-0 h-full w-full z-50 transition-transform duration-300 ${
+				className={`fixed top-[16px] left-0 h-full w-full z-50 transition-transform duration-300 ${
 					menuOpen ? "translate-x-0" : "-translate-x-full"
 				}`}
+				style={{ zIndex: 900 }} // Below the navbar so header/button stay visible
 				onClick={() => setMenuOpen(false)}
 			>
 				{/* Gradient Background */}
@@ -83,10 +90,10 @@ export default function Navbar({ activeRoute }: NavbarProps) {
 								<X size={28} />
 							</button>
 						</div>
-						<div
-							style={{ color: "white", marginLeft: "65px", marginTop: "-50px" }}
-						>
-							<ul className="space-y-4">
+						{/* Sidebar Links */}
+						{/* Removed marginTop to prevent hiding the first item */}
+						<div style={{ color: "white", marginLeft: "65px" }}>
+							<ul className="space-y-4" style={{ marginLeft: 2 }}>
 								{sidebarLinks.map((page) => (
 									<li key={page.href}>
 										<Link
