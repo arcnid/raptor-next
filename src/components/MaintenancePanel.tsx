@@ -9,6 +9,7 @@ import {
 	FileText,
 	Activity,
 	HeadphonesIcon,
+	StopCircle,
 } from "lucide-react";
 
 const JogControl = ({ title }: { title: string }) => (
@@ -18,6 +19,10 @@ const JogControl = ({ title }: { title: string }) => (
 			<Button size="lg" className="w-24 h-24 text-lg font-bold">
 				<ChevronLeft size={32} />
 				REV
+			</Button>
+			<Button size="lg" className="w-24 h-24 text-lg font-bold">
+				<StopCircle size={32} />
+				Stop
 			</Button>
 			<Button size="lg" className="w-24 h-24 text-lg font-bold">
 				FWD
